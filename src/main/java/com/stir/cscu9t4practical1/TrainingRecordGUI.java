@@ -7,7 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import java.lang.Number;
 
-// TODO: 7. Add changing inputs for each entry type
+// TODO: 8 finished
 
 public class TrainingRecordGUI extends JFrame implements ActionListener {
 
@@ -19,6 +19,12 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JTextField mins = new JTextField(2);
     private JTextField secs = new JTextField(2);
     private JTextField dist = new JTextField(4);
+    private JTextField repetition = new JTextField(3);
+    private JTextField recovery = new JTextField(3);
+    private JTextField where = new JTextField(10);
+    private JTextField terrain = new JTextField(10);
+    private JTextField tempo = new JTextField(10);
+
     private JLabel labn = new JLabel(" Name:");
     private JLabel labd = new JLabel(" Day:");
     private JLabel labm = new JLabel(" Month:");
@@ -27,14 +33,23 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JLabel labmm = new JLabel(" Mins:");
     private JLabel labs = new JLabel(" Secs:");
     private JLabel labdist = new JLabel(" Distance (km):");
+    private JLabel labRepetition = new JLabel("Repetition:");
+    private JLabel labRecovery = new JLabel("Recovery:");
+    private JLabel labWhere = new JLabel("Where:");
+    private JLabel labTerrain = new JLabel("Terrain:");
+    private JLabel labTempo = new JLabel("Tempo:");
+
     private JButton addR = new JButton("Add");
     private JButton lookUpByDate = new JButton("Look Up");
     private JButton findAllByDate = new JButton("Find All By Date");
-    private JComboBox entryType = new JComboBox<>(new String[] { "Sprint", "Swim", "Cycle" });
+    private JButton findAllByName = new JButton("Find All By Name");
+
+    private JComboBox entryType = new JComboBox<>(new String[] { "Generic", "Sprint", "Swim", "Cycle" });
 
     private TrainingRecord myAthletes = new TrainingRecord();
 
     private JTextArea outputArea = new JTextArea(5, 50);
+    JButton show = new JButton("show");
 
     public static void main(String[] args) {
         TrainingRecordGUI applic = new TrainingRecordGUI();
@@ -44,6 +59,8 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     public TrainingRecordGUI() {
         super("Training Record");
         setLayout(new FlowLayout());
+        add(entryType);
+        entryType.addActionListener(this);
         add(labn);
         add(name);
         name.setEditable(true);
@@ -68,15 +85,24 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(labdist);
         add(dist);
         dist.setEditable(true);
-        add(entryType);
+
         add(addR);
         addR.addActionListener(this);
         add(lookUpByDate);
         lookUpByDate.addActionListener(this);
         findAllByDate.addActionListener(this);
         add(findAllByDate);
+
+        add(findAllByName);
+        findAllByName.addActionListener(this);
+
         add(outputArea);
         outputArea.setEditable(false);
+
+        show.addActionListener(this);
+
+        add(show);
+
         setSize(720, 200);
         setVisible(true);
         blankDisplay();
@@ -90,7 +116,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String message = "";
         if (event.getSource() == addR) {
-            message = addEntry("generic");
+            message = addEntry(entryType.getSelectedItem().toString());
         }
         if (event.getSource() == lookUpByDate) {
             message = lookupEntry();
@@ -100,13 +126,23 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             // System.out.println("Not implemented yet");
             message = findByDate();
         }
+        if (event.getSource() == entryType) {
+            comboBoxAction();
+        }
+        if (event.getSource() == findAllByName) {
+            message = findByName();
+        }
+        if (event.getSource() == show) {
+            System.out.println(myAthletes.getNumberOfEntries());
+            // System.out.println(myAthletes.getAllEntries());
+        }
         outputArea.setText(message);
         blankDisplay();
     } // actionPerformed
 
     public String addEntry(String what) {
         String message = "Record added\n";
-        System.out.println("Adding " + what + " entry to the records");
+        System.out.println("Adding " + what.toLowerCase() + " entry to the records");
         String n = name.getText();
         int m = Integer.parseInt(month.getText());
         int d = Integer.parseInt(day.getText());
@@ -115,7 +151,22 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         int h = Integer.parseInt(hours.getText());
         int mm = Integer.parseInt(mins.getText());
         int s = Integer.parseInt(secs.getText());
-        Entry e = new Entry(n, d, m, y, h, mm, s, km);
+        Entry e = new Entry(n, d, mm, y, h, m, s, s);
+        if (what == "Generic") {
+            e = new Entry(n, d, m, y, h, mm, s, km);
+        } else if (what == "Sprint") {
+            int rep = Integer.parseInt(repetition.getText());
+            int rec = Integer.parseInt(recovery.getText());
+            e = new SprintEntry(n, d, m, y, h, mm, s, km, rep, rec);
+        } else if (what == "Swim") {
+            String w = where.getText();
+            e = new SwimEntry(n, d, m, y, h, mm, s, km, w);
+        } else if (what == "Cycle") {
+            String ter = terrain.getText();
+            String tem = tempo.getText();
+            e = new CycleEntry(n, d, m, y, h, mm, s, s, ter, tem);
+        }
+
         myAthletes.addEntry(e);
         return message;
     }
@@ -134,6 +185,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             // JOptionPane o = new JOptionPane();
             JOptionPane.showMessageDialog(this, "Error while reading day", "Error", JOptionPane.ERROR_MESSAGE);
             dates[3] = -1;
+            return dates;
         }
 
         try {
@@ -147,6 +199,8 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             // JOptionPane o = new JOptionPane();
             JOptionPane.showMessageDialog(this, "Error while reading month", "Error", JOptionPane.ERROR_MESSAGE);
             dates[3] = -1;
+            return dates;
+
         }
 
         try {
@@ -154,12 +208,14 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             if (y <= 0) {
                 throw new Exception();
             }
-            dates[3] = y;
+            dates[2] = y;
         } catch (Exception e) {
             // System.out.println(e);
             // JOptionPane o = new JOptionPane();
             JOptionPane.showMessageDialog(this, "Error while reading year", "Error", JOptionPane.ERROR_MESSAGE);
             dates[3] = -1;
+            return dates;
+
         }
 
         return dates;
@@ -188,6 +244,77 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return message;
     }
 
+    public String findByName() {
+        return myAthletes.findByName(name.getText());
+    }
+
+    public void comboBoxAction() {
+        String type = entryType.getSelectedItem().toString();
+
+        if (type == "Generic") {
+            remove(labRepetition);
+            remove(repetition);
+            remove(labRecovery);
+            remove(recovery);
+            remove(labWhere);
+            remove(where);
+            remove(labTerrain);
+            remove(terrain);
+            remove(labTempo);
+            remove(tempo);
+
+            rootPane.revalidate();
+            rootPane.repaint();
+
+        } else if (type == "Sprint") {
+            remove(labWhere);
+            remove(where);
+            remove(labTerrain);
+            remove(terrain);
+            remove(labTempo);
+            remove(tempo);
+
+            add(labRepetition, 17);
+            add(repetition, 18);
+            add(labRecovery, 19);
+            add(recovery, 20);
+
+            rootPane.revalidate();
+            rootPane.repaint();
+
+        } else if (type == "Swim") {
+            remove(labRepetition);
+            remove(repetition);
+            remove(labRecovery);
+            remove(recovery);
+            remove(labTerrain);
+            remove(terrain);
+            remove(labTempo);
+            remove(tempo);
+
+            add(labWhere, 17);
+            add(where, 18);
+
+            rootPane.revalidate();
+            rootPane.repaint();
+        } else if (type == "Cycle") {
+            remove(labRepetition);
+            remove(repetition);
+            remove(labRecovery);
+            remove(recovery);
+            remove(labWhere);
+            remove(where);
+
+            add(labTerrain, 17);
+            add(terrain, 18);
+            add(labTempo, 19);
+            add(tempo, 20);
+
+            rootPane.revalidate();
+            rootPane.repaint();
+        }
+    }
+
     public void blankDisplay() {
         name.setText("");
         day.setText("");
@@ -197,6 +324,11 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         mins.setText("");
         secs.setText("");
         dist.setText("");
+        repetition.setText("");
+        recovery.setText("");
+        where.setText("");
+        terrain.setText("");
+        tempo.setText("");
 
     }// blankDisplay
      // Fills the input fields on the display for testing purposes only
