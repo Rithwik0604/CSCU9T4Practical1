@@ -11,27 +11,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+
 /**
  *
  * @author saemundur
  */
 public class SprintEntryTest {
-    
+
     public SprintEntryTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
     }
-    
+
     @AfterEach
     public void tearDown() {
     }
@@ -127,11 +129,11 @@ public class SprintEntryTest {
     public void testGetDistance() {
         System.out.println("getDistance");
         Entry instance = new SprintEntry("Alice", 1, 2, 2003, 0, 16, 7, 300, 4, 2);
-        float expResult = 3.0F;
+        float expResult = 300.0F;
         float result = instance.getDistance();
         assertEquals(expResult, result, 0.0);
     }
-    
+
     /**
      * Test of getRepetitions method of class SprintEntry
      */
@@ -141,9 +143,9 @@ public class SprintEntryTest {
         Entry instance = new SprintEntry("Alice", 1, 2, 2003, 0, 16, 7, 300, 4, 2);
         int expResults = 4;
         int result = instance.getRepetitions();
-        assertEquals(expResult, result);
+        assertEquals(expResults, result);
     }
-    
+
     /**
      * Test of getRecovery method of class SprintEntry
      */
@@ -153,7 +155,7 @@ public class SprintEntryTest {
         Entry instance = new SprintEntry("Alice", 1, 2, 2003, 0, 16, 7, 300, 4, 2);
         int expResults = 2;
         int result = instance.getRecovery();
-        assertEquals(expResult, result);
+        assertEquals(expResults, result);
     }
 
     /**
@@ -167,5 +169,5 @@ public class SprintEntryTest {
         String result = instance.getEntry();
         assertEquals(expResult, result);
     }
-    
+
 }
