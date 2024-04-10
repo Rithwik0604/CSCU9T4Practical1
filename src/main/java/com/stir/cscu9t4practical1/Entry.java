@@ -57,12 +57,24 @@ public class Entry {
     } // getEntry
 
     // subclass methods
-    public int getRepetitions(){
+    public int getRepetitions() {
         return 0;
     }
 
     public int getRecovery() {
         return 0;
+    }
+
+    public String getTerrain() {
+        return null;
+    }
+
+    public String getTempo() {
+        return null;
+    }
+
+    public String getWhere() {
+        return null;
     }
 
 } // Entry

@@ -17,17 +17,9 @@ public class SprintEntry extends Entry {
         return repetitions;
     }
 
-    public void setRepetitions(int repetition) {
-        this.repetitions = repetition;
-    }
-
     @Override
     public int getRecovery() {
         return recovery;
-    }
-
-    public void setRecovery(int recovery) {
-        this.recovery = recovery;
     }
 
     @Override

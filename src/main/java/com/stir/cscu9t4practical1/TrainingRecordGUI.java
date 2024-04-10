@@ -7,6 +7,8 @@ import java.util.*;
 import javax.swing.*;
 import java.lang.Number;
 
+// TODO: 7. Add changing inputs for each entry type
+
 public class TrainingRecordGUI extends JFrame implements ActionListener {
 
     private JTextField name = new JTextField(30);
@@ -28,6 +30,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JButton addR = new JButton("Add");
     private JButton lookUpByDate = new JButton("Look Up");
     private JButton findAllByDate = new JButton("Find All By Date");
+    private JComboBox entryType = new JComboBox<>(new String[] { "Sprint", "Swim", "Cycle" });
 
     private TrainingRecord myAthletes = new TrainingRecord();
 
@@ -65,6 +68,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(labdist);
         add(dist);
         dist.setEditable(true);
+        add(entryType);
         add(addR);
         addR.addActionListener(this);
         add(lookUpByDate);
@@ -116,8 +120,8 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return message;
     }
 
-    public int[] parseDates(){
-        int[] dates = {0,0,0,0};
+    public int[] parseDates() {
+        int[] dates = { 0, 0, 0, 0 };
 
         try {
             int d = Integer.parseInt(day.getText());
@@ -157,8 +161,6 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, "Error while reading year", "Error", JOptionPane.ERROR_MESSAGE);
             dates[3] = -1;
         }
-
-
 
         return dates;
     }
