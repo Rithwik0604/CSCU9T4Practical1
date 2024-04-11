@@ -7,7 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import java.lang.Number;
 
-// TODO: 8 finished
+// TODO: starting 9
 
 public class TrainingRecordGUI extends JFrame implements ActionListener {
 
@@ -43,13 +43,13 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JButton lookUpByDate = new JButton("Look Up");
     private JButton findAllByDate = new JButton("Find All By Date");
     private JButton findAllByName = new JButton("Find All By Name");
+    private JButton removeR = new JButton("Remove");
 
     private JComboBox entryType = new JComboBox<>(new String[] { "Generic", "Sprint", "Swim", "Cycle" });
 
     private TrainingRecord myAthletes = new TrainingRecord();
 
     private JTextArea outputArea = new JTextArea(5, 50);
-    JButton show = new JButton("show");
 
     public static void main(String[] args) {
         TrainingRecordGUI applic = new TrainingRecordGUI();
@@ -96,12 +96,11 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(findAllByName);
         findAllByName.addActionListener(this);
 
+        add(removeR);
+        removeR.addActionListener(this);
+
         add(outputArea);
         outputArea.setEditable(false);
-
-        show.addActionListener(this);
-
-        add(show);
 
         setSize(720, 200);
         setVisible(true);
@@ -132,9 +131,8 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         if (event.getSource() == findAllByName) {
             message = findByName();
         }
-        if (event.getSource() == show) {
-            System.out.println(myAthletes.getNumberOfEntries());
-            // System.out.println(myAthletes.getAllEntries());
+        if (event.getSource() == removeR) {
+            message = removeEntry();
         }
         outputArea.setText(message);
         blankDisplay();
@@ -167,7 +165,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             e = new CycleEntry(n, d, m, y, h, mm, s, s, ter, tem);
         }
 
-        myAthletes.addEntry(e);
+        message = myAthletes.addEntry(e);
         return message;
     }
 
@@ -227,7 +225,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             return "";
         }
         outputArea.setText("looking up record ...");
-        String message = myAthletes.lookupEntry(dates[0], dates[1], dates[3]);
+        String message = myAthletes.lookupEntry(dates[0], dates[1], dates[2]);
         return message;
     }
 
@@ -313,6 +311,16 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             rootPane.revalidate();
             rootPane.repaint();
         }
+    }
+
+    public String removeEntry() {
+        int[] dates = parseDates();
+        if (dates[3] == -1) {
+            return "";
+        }
+
+        Entry temp = new Entry(name.getText(), dates[0], dates[1], dates[2], 0, 0, 0, 0);
+        return myAthletes.removeEntry(temp);
     }
 
     public void blankDisplay() {
