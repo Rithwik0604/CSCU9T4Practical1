@@ -7,7 +7,6 @@ import java.util.*;
 import javax.swing.*;
 import java.lang.Number;
 
-// TODO: starting 9
 
 public class TrainingRecordGUI extends JFrame implements ActionListener {
 
@@ -145,9 +144,10 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         String message = "Record added\n";
         System.out.println("Adding " + what.toLowerCase() + " entry to the records");
         String n = name.getText();
-        int m = Integer.parseInt(month.getText());
-        int d = Integer.parseInt(day.getText());
-        int y = Integer.parseInt(year.getText());
+        int dates[] = parseDates();
+        int d = dates[0];
+        int m = dates[1];
+        int y = dates[2];
         float km = java.lang.Float.parseFloat(dist.getText());
         int h = Integer.parseInt(hours.getText());
         int mm = Integer.parseInt(mins.getText());
@@ -177,6 +177,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return message;
     }
 
+    // parsing the dates and handling errors
     public int[] parseDates() {
         int[] dates = { 0, 0, 0, 0 };
 
@@ -238,9 +239,6 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     }
 
     public String findByDate() {
-        // int d = Integer.parseInt(day.getText());
-        // int m = Integer.parseInt(month.getText());
-        // int y = Integer.parseInt(year.getText());
         int[] dates = parseDates();
         if (dates[3] == -1) {
             return "";
@@ -254,6 +252,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return myAthletes.findByName(name.getText());
     }
 
+    // changing gui based on combo box selection
     public void comboBoxAction() {
         String type = entryType.getSelectedItem().toString();
 
@@ -336,6 +335,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return message;
     }
 
+    // enable/disable buttons based on entries
     public void enableDisableButtons(boolean b) {
         lookUpByDate.setEnabled(b);
         findAllByDate.setEnabled(b);

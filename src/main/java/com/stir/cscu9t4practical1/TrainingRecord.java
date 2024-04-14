@@ -45,6 +45,7 @@ public class TrainingRecord {
         return result;
     } // lookupEntry
 
+    // Finding entry by entered date
     public String findByDate(int d, int m, int y) {
         ListIterator<Entry> iter = tr.listIterator();
         boolean flag = false;
@@ -62,9 +63,11 @@ public class TrainingRecord {
         return result;
     }
 
+    // Finding entry by name (case-insensitive)
     public String findByName(String name) {
         ListIterator<Entry> iter = tr.listIterator();
         String result = "";
+        // if a result was found
         boolean flag = false;
         while (iter.hasNext()) {
             Entry current = iter.next();
@@ -83,6 +86,7 @@ public class TrainingRecord {
         return result;
     }
 
+    // removing entry by name and date
     public String removeEntry(Entry e) {
 
         boolean removed = false;
@@ -108,6 +112,7 @@ public class TrainingRecord {
         return "No entry found\n";
     }
 
+    // private method to verify a week before current date
     private boolean between(Entry e, HashMap<String, Integer> pastWeek) {
         Calendar current = Calendar.getInstance();
 
@@ -127,6 +132,7 @@ public class TrainingRecord {
 
     }
 
+    // getting weekly distance
     public String weeklyDistance(String name) {
         Calendar current = Calendar.getInstance();
         current.add(Calendar.DAY_OF_MONTH, -7);
