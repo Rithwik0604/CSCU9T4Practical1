@@ -79,10 +79,10 @@ public class TrainingRecordGUITest {
         TrainingRecordGUI instance = new TrainingRecordGUI();
         instance.blankDisplay();
     }
-    
+
     /**
      * Test of addEntry method, of class TrainingRecordGUI
-     * 
+     *
      */
     @Test
     public void testAddEntry(){
@@ -92,15 +92,15 @@ public class TrainingRecordGUITest {
         instance.fillDisplay(entry);
         String message = instance.addEntry("generic");
         System.out.println(message);
-        assertEquals(message,"Record added\n");
+        assertEquals(message,"Record Added\n");
     }
-    
+
     /**
      * Test to see if all display requirements have been met
      */
     @Test
     public void testButtonsPresentInGUI() throws IllegalAccessException, IllegalArgumentException{
-        System.out.println("Check if you have added the buttons"); 
+        System.out.println("Check if you have added the buttons");
         TrainingRecordGUI instance = new TrainingRecordGUI();
         Class<?> instanceClass = instance.getClass();
         String[] expectedFields = {"findAllByDate","lookUpByDate"}; // add RemoveEntry when it is ready

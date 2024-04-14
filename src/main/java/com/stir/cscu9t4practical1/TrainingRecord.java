@@ -2,6 +2,7 @@
 package com.stir.cscu9t4practical1;
 
 import java.util.*;
+import java.util.Calendar;
 
 public class TrainingRecord {
     private List<Entry> tr;
@@ -105,6 +106,54 @@ public class TrainingRecord {
         }
 
         return "No entry found\n";
+    }
+
+    private boolean between(Entry e, HashMap<String, Integer> pastWeek) {
+        Calendar current = Calendar.getInstance();
+
+        boolean flag = false;
+
+        if (e.getDay() >= pastWeek.get("day") && e.getDay() <= current.get(Calendar.DAY_OF_MONTH)) {
+            flag = true;
+        }
+        if (e.getMonth() >= pastWeek.get("month") && e.getMonth() <= (current.get(Calendar.MONTH) + 1)) {
+            flag = true;
+        }
+        if (e.getYear() >= pastWeek.get("year") && e.getYear() <= current.get(Calendar.YEAR)) {
+            flag = true;
+        }
+
+        return flag;
+
+    }
+
+    public String weeklyDistance(String name) {
+        Calendar current = Calendar.getInstance();
+        current.add(Calendar.DAY_OF_MONTH, -7);
+
+        HashMap<String, Integer> week = new HashMap<>();
+        week.put("day", current.get(Calendar.DAY_OF_MONTH));
+        week.put("month", current.get(Calendar.MONTH) + 1);
+        week.put("year", current.get(Calendar.YEAR));
+
+        boolean flag = false;
+        float dist = 0;
+
+        ListIterator<Entry> iter = tr.listIterator();
+
+        while (iter.hasNext()) {
+            Entry temp = iter.next();
+            if (temp.getName().equals(name) && between(temp, week)) {
+                flag = true;
+                dist += temp.getDistance();
+            }
+        }
+
+        if (flag) {
+            return name + " ran " + dist + " km\n";
+        }
+
+        return "No entry found";
     }
 
     // Count the number of entries

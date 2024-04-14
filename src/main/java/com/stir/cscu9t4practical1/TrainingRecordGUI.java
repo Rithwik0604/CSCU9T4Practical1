@@ -99,6 +99,9 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(removeR);
         removeR.addActionListener(this);
 
+        // setting all buttons except add to disabled
+        enableDisableButtons(false);
+
         add(outputArea);
         outputArea.setEditable(false);
 
@@ -166,6 +169,11 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         }
 
         message = myAthletes.addEntry(e);
+
+        if (myAthletes.getNumberOfEntries() >= 1) {
+            enableDisableButtons(true);
+        }
+
         return message;
     }
 
@@ -320,7 +328,19 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         }
 
         Entry temp = new Entry(name.getText(), dates[0], dates[1], dates[2], 0, 0, 0, 0);
-        return myAthletes.removeEntry(temp);
+
+        String message = myAthletes.removeEntry(temp);
+        if (myAthletes.getNumberOfEntries() < 1) {
+            enableDisableButtons(false);
+        }
+        return message;
+    }
+
+    public void enableDisableButtons(boolean b) {
+        lookUpByDate.setEnabled(b);
+        findAllByDate.setEnabled(b);
+        findAllByName.setEnabled(b);
+        removeR.setEnabled(b);
     }
 
     public void blankDisplay() {
